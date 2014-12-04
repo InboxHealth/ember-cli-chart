@@ -55,5 +55,5 @@ export default Ember.Component.extend({
       this.destroyChart();
       this.renderChart();
     }
-  }.observes('data', 'options')
+  }.observes('data', 'options', 'data.datasets.@each.data')
 });
