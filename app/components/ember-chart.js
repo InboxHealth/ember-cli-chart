@@ -52,11 +52,19 @@ export default Ember.Component.extend({
     	     });
           }
       });
-      this.get('chart').update();
+      if(this.get('chart').scale.xLabels.length !== this.get('data.labels').length)
+      {
+        this.destroyChart();
+        this.renderChart();
+      }
+      else
+      {
+        this.get('chart').update();
+      }
     } catch(error) {
       // Ember.warn('Dataset is not equal in structure as previous values. Rebuilding chart...');
       this.destroyChart();
       this.renderChart();
     }
-  }.observes('data', 'options', 'data.datasets.@each.data')
+  }.observes('data', 'options', 'data.datasets.@each.data', 'data.labels.@each')
 });
