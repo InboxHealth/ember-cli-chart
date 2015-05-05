@@ -1,70 +1,73 @@
 import Ember from 'ember';
-/* global Chart */
+import EmberChart from 'ember-cli-chart/components/ember-chart';
 
-export default Ember.Component.extend({
-  tagName: 'canvas',
-  attributeBindings: ['width', 'height'],
+// export default Ember.Component.extend({
+//   tagName: 'canvas',
+//   attributeBindings: ['width', 'height'],
 
-  renderChart: function(){
-    var context = this.get('element').getContext('2d');
-    var data = this.get('data');
-    var type = this.get('type').classify();
-    var options = Ember.merge({}, this.get('options'));
+//   renderChart: function(){
+//     var context = this.get('element').getContext('2d');
+//     var data = this.get('data');
+//     var type = this.get('type').classify();
+//     var options = Ember.merge({}, this.get('options'));
 
-    var chart = new Chart(context)[type](data, options);
+//     var chart = new Chart(context)[type](data, options);
     
-    if (this.get('legend')) {
-      var legend = chart.generateLegend();
-      this.$().parent().append(legend);
-    };
+//     if (this.get('legend')) {
+//       var legend = chart.generateLegend();
+//       this.$().parent().append(legend);
+//     };
 
-    this.set('chart', chart);
-  }.on('didInsertElement'),
+//     this.set('chart', chart);
+//   }.on('didInsertElement'),
 
-  destroyChart: function(){
-    if (this.get('legend')) {
-      this.$().parent().children('[class$=legend]').remove();
-    };
+//   destroyChart: function(){
+//     if (this.get('legend')) {
+//       this.$().parent().children('[class$=legend]').remove();
+//     };
     
-    this.get('chart').destroy();
-  }.on('willDestroyElement'),
+//     this.get('chart').destroy();
+//   }.on('willDestroyElement'),
 
-  updateChart: function(){
-    try {
-      var self = this;
-      this.get('data.datasets').forEach(function(dataset, i) {
-          if(dataset.data)
-          {
-          	dataset.data.forEach(function(item, j) {
-          	  var chart = self.get('chart');
+//   updateChart: function(){
+//     try {
+//       var self = this;
+//       this.get('data.datasets').forEach(function(dataset, i) {
+//           if(dataset.data)
+//           {
+//           	dataset.data.forEach(function(item, j) {
+//           	  var chart = self.get('chart');
           	  		
-          	  if(typeof chart.datasets[i] === 'undefined') {
-          	    self.get('chart').segments[j].value = item;
-          	  } else {
-          	    var dataSet = self.get('chart').datasets[i];
+//           	  if(typeof chart.datasets[i] === 'undefined') {
+//           	    self.get('chart').segments[j].value = item;
+//           	  } else {
+//           	    var dataSet = self.get('chart').datasets[i];
           	  
-          	    if(typeof dataSet.bars !== 'undefined') {
-          	      self.get('chart').datasets[i].bars[j].value = item;
-          	    } else {
-          	      self.get('chart').datasets[i].points[j].value = item;
-          	    }
-          	  }
-    	     });
-          }
-      });
-      if(this.get('chart').scale.xLabels.length !== this.get('data.labels').length)
-      {
-        this.destroyChart();
-        this.renderChart();
-      }
-      else
-      {
-        this.get('chart').update();
-      }
-    } catch(error) {
-      // Ember.warn('Dataset is not equal in structure as previous values. Rebuilding chart...');
-      this.destroyChart();
-      this.renderChart();
-    }
-  }.observes('data', 'options', 'data.datasets.@each.data', 'data.labels.@each')
-});
+//           	    if(typeof dataSet.bars !== 'undefined') {
+//           	      self.get('chart').datasets[i].bars[j].value = item;
+//           	    } else {
+//           	      self.get('chart').datasets[i].points[j].value = item;
+//           	    }
+//           	  }
+//     	     });
+//           }
+//       });
+//       if(this.get('chart').scale.xLabels.length !== this.get('data.labels').length)
+//       {
+//         this.destroyChart();
+//         this.renderChart();
+//       }
+//       else
+//       {
+//         this.get('chart').update();
+//       }
+//     } catch(error) {
+//       // Ember.warn('Dataset is not equal in structure as previous values. Rebuilding chart...');
+//       this.destroyChart();
+//       this.renderChart();
+//     }
+//   }.observes('data', 'options', 'data.datasets.@each.data', 'data.labels.@each')
+// });
+
+export default EmberChart;
+
