@@ -5,11 +5,25 @@ export default Ember.Component.extend({
   tagName: 'canvas',
   attributeBindings: ['width', 'height'],
 
-  renderChart: function(){
+  redraw: function(){
+    this.destroyChart();
+    var newWidth = this.$().parent().width();
+    this.$().prop({
+      'width':newWidth
+    });
+    this.renderChart(false); //don't reanimate when you're redrawing the chart when the navbar opens
+  }.observes('navIsOpen'),
+
+  renderChart: function(animationBool){
+    var animation = true;
+    if(arguments.length > 0){
+      animation = animationBool;
+    }
     var context = this.get('element').getContext('2d');
     var data = this.get('data');
     var type = this.get('type').classify();
     var options = Ember.merge({}, this.get('options'));
+    options.animation = animation;
 
     var chart = new Chart(context)[type](data, options);
     
@@ -35,21 +49,21 @@ export default Ember.Component.extend({
       this.get('data.datasets').forEach(function(dataset, i) {
           if(dataset.data)
           {
-          	dataset.data.forEach(function(item, j) {
-          	  var chart = self.get('chart');
-          	  		
-          	  if(typeof chart.datasets[i] === 'undefined') {
-          	    self.get('chart').segments[j].value = item;
-          	  } else {
-          	    var dataSet = self.get('chart').datasets[i];
-          	  
-          	    if(typeof dataSet.bars !== 'undefined') {
-          	      self.get('chart').datasets[i].bars[j].value = item;
-          	    } else {
-          	      self.get('chart').datasets[i].points[j].value = item;
-          	    }
-          	  }
-    	     });
+            dataset.data.forEach(function(item, j) {
+              var chart = self.get('chart');
+                  
+              if(typeof chart.datasets[i] === 'undefined') {
+                self.get('chart').segments[j].value = item;
+              } else {
+                var dataSet = self.get('chart').datasets[i];
+              
+                if(typeof dataSet.bars !== 'undefined') {
+                  self.get('chart').datasets[i].bars[j].value = item;
+                } else {
+                  self.get('chart').datasets[i].points[j].value = item;
+                }
+              }
+           });
           }
       });
       if(this.get('chart').scale.xLabels.length !== this.get('data.labels').length)
