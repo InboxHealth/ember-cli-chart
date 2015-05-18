@@ -80,5 +80,5 @@ export default Ember.Component.extend({
       this.destroyChart();
       this.renderChart();
     }
-  }.observes('data', 'options', 'data.datasets.@each.data', 'data.labels.@each')
+  }.observes('data', 'options', 'data.datasets.@each.data', 'data.labels.@each', 'data.@each.value') //add the data.@each.value in the case of pie charts
 });
