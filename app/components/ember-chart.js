@@ -5,7 +5,13 @@ export default Ember.Component.extend({
   tagName: 'canvas',
   attributeBindings: ['width', 'height'],
 
-  redraw: function(){
+  eligRedraw: function(){
+    Ember.run.next(this, function(){ //run next so that it can resize according to all the changes to the divs
+      this.get('chart').resize().render(); 
+    });
+  }.observes('data'),
+
+  navRedraw: function(){
     this.destroyChart();
     var newWidth = this.$().parent().width();
     this.$().prop({
