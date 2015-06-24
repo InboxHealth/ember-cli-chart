@@ -6,20 +6,20 @@ export default Ember.Component.extend({
   tagName: 'canvas',
   attributeBindings: ['width', 'height'],
 
-  eligRedraw: function(){
-    Ember.run.next(this, function(){ //run next so that it can resize according to all the changes to the divs
-      this.get('chart').resize().render(); 
-    });
-  }.observes('data'),
+  // eligRedraw: function(){
+  //   Ember.run.next(this, function(){ //run next so that it can resize according to all the changes to the divs
+  //     this.get('chart').resize().render(); 
+  //   });
+  // }.observes('data'),
 
-  navRedraw: function(){
-    this.destroyChart();
-    var newWidth = this.$().parent().width();
-    this.$().prop({
-      'width': newWidth
-    });
-    this.renderChart(false); //don't reanimate when you're redrawing the chart when the navbar opens
-  }.observes('navIsOpen'),
+  // navRedraw: function(){
+  //   this.willDestroyElement();
+  //   var newWidth = this.$().parent().width();
+  //   this.$().prop({
+  //     'width': newWidth
+  //   });
+  //   this.renderChart(false); //don't reanimate when you're redrawing the chart when the navbar opens
+  // }.observes('navIsOpen'),
 
   didInsertElement: function(){
     var context = this.get('element').getContext('2d');
