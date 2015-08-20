@@ -125,7 +125,34 @@ var ChartTestData = Ember.Object.extend({
             }
         ]
     };
-  })
+  }),
+  barData: Ember.computed(function(){
+    return {
+        labels: ["January", "February", "March"],
+        datasets: [
+            {
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: [55, 41, 80]
+            },
+            {
+                label: "My Second dataset",
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(151,187,205,1)",
+                data: [28, 48, 40]
+            }
+        ]
+    };
+  }),
 });
 
 var testData = ChartTestData.create();
@@ -146,7 +173,7 @@ test('it can be a pie chart', function(assert) {
 });
 
 test('it can be a pie chart with legend', function(assert) {
-  var component = this.subject({
+  this.subject({
     type: 'Pie',
     data: testData.get('pieData'),
     legend: true
@@ -156,6 +183,23 @@ test('it can be a pie chart with legend', function(assert) {
 
   assert.ok(chartParent.hasClass('chart-parent'));
   assert.ok(chartParent.find('.pie-legend').length);
+});
+
+test('it should rebuild the legend in case the chart changes', function(assert) {
+  var component = this.subject({
+    type: 'Pie',
+    data: testData.get('pieData'),
+    legend: true
+  });
+
+  var chartParent = this.$().parent();
+  
+  assert.ok(chartParent.find('.pie-legend').text().match(/Red/));
+
+  // Update Data
+  component.set('data', testData.get('pieData2'));
+  
+  assert.ok(chartParent.find('.pie-legend').text().match(/Black/), 'The legend should have updated');
 });
 
 test('it can be a line chart', function(assert) {
@@ -294,4 +338,21 @@ test('it should rebuild line chart if data structure changes', function(assert) 
 
   chart = component.get('chart');
   assert.equal(chart.datasets.length, 2);
+});
+
+test('it should rebuild bar chart if data structure changes', function(assert) {
+  var component = this.subject({
+    type: 'Bar',
+    data: testData.get('lineData')
+  });
+
+  this.render();
+  var chart = component.get('chart');
+  assert.equal(chart.datasets[0].bars.length, 7);
+
+  // Update Data -- increase dataset
+  component.set('data', testData.get('barData'));
+
+  chart = component.get('chart');
+  assert.equal(chart.datasets[0].bars.length, 3);
 });
