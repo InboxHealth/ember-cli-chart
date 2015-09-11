@@ -6,26 +6,27 @@ export default Ember.Component.extend({
   tagName: 'canvas',
   attributeBindings: ['width', 'height'],
 
-  // eligRedraw: function(){
-  //   Ember.run.next(this, function(){ //run next so that it can resize according to all the changes to the divs
-  //     this.get('chart').resize().render(); 
-  //   });
-  // }.observes('data'),
+  eligRedraw: Ember.observer('data', function() {
+    Ember.run.next(this, function(){ //run next so that it can resize according to all the changes to the divs
+      this.get('chart').resize().render(); 
+    });
+  }),
 
-  // navRedraw: function(){
-  //   this.willDestroyElement();
-  //   var newWidth = this.$().parent().width();
-  //   this.$().prop({
-  //     'width': newWidth
-  //   });
-  //   this.renderChart(false); //don't reanimate when you're redrawing the chart when the navbar opens
-  // }.observes('navIsOpen'),
+  navRedraw: Ember.observer('navIsOpen', function() {
+    this.willDestroyElement();
+    var newWidth = this.$().parent().width();
+    this.$().prop({
+      'width': newWidth
+    });
+    this.didInsertElement(false); //don't reanimate when you're redrawing the chart when the navbar opens
+  }),
 
-  didInsertElement: function(){
+  didInsertElement: function(animation = true){
     var context = this.get('element').getContext('2d');
     var data = this.get('data');
     var type = Ember.String.classify(this.get('type'));
     var options = Ember.merge({}, this.get('options'));
+    options.animation = animation;
 
     var chart = new Chart(context)[type](data, options);
 
