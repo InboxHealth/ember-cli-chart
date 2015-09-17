@@ -54,7 +54,12 @@ export default Ember.Object.extend({
     var chart = this.get('chart');
     var chartSegments = Ember.A(chart.segments);
 
-    chart.segments.forEach(function(segment, i) {
+    chart.segments.some(function(segment, i) {
+      if(isNaN(segment.circumference))
+      {
+        this.set('redraw', true);
+        return true;
+      }
       var updatedSegment = data.findBy('label', segment.label);
       if (updatedSegment) {
         // Same segment exists in new data
@@ -63,7 +68,7 @@ export default Ember.Object.extend({
         // Segment does not exist anymore in new data
         chart.removeData(i);
       }
-    });
+    }, this);
 
     data.forEach(function(segment) {
       var currentSegment = chartSegments.findBy('label', segment.label);
