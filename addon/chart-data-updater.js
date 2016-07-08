@@ -22,6 +22,12 @@ export default Ember.Object.extend({
       if (chart.datasets[0].bars.length !== datasets[0].data.length) {
         return this.set('redraw', true);
       }
+    } else if (typeof chart.datasets[0].points !== 'undefined') {
+      chart.datasets.forEach(function(value, index) {
+        if (chart.datasets[index].points.length !== datasets[index].data.length) {
+          return self.set('redraw', true);
+        }
+      });
     }
 
     // Update Labels
@@ -36,8 +42,14 @@ export default Ember.Object.extend({
           item = item || 0;
           if(typeof chartDataset.bars !== 'undefined') {
             chartDataset.bars[j].value = item;
+
+            // Update tooltip labels
+            chartDataset.bars[j].label = labels[j];
           } else {
             chartDataset.points[j].value = item;
+
+            // Update tooltip labels
+            chartDataset.points[j].label = labels[j];
           }
         });
       } catch (e) {
@@ -64,6 +76,10 @@ export default Ember.Object.extend({
       if (updatedSegment) {
         // Same segment exists in new data
         chart.segments[i].value = updatedSegment.value || 0;
+
+        // Update label
+        chart.segments[i].label = updatedSegment.label || '';
+
       } else {
         // Segment does not exist anymore in new data
         chart.removeData(i);

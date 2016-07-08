@@ -2,14 +2,21 @@
 
 <div>
 	<h3>Line Chart</h3>
-	{{ember-chart type='Line' data=lineData width=600 height=200}}
+	{{ember-chart type='Line' data=lineData width=600 height=200 legend=true}}
 </div>
 
 <div>
-	<h3>Line Chart Update</h3>
+	<h3>Line Chart Data Update</h3>
 	<ul>
 		<li>{{input value=lineValue1 type="number"}}</li>
 		<li>{{input value=lineValue2 type="number"}}</li>
+	</ul>
+</div>
+
+<div>
+	<h3>Line Chart Label Update</h3>
+	<ul>
+		<li>{{input value=lineLabel type="text"}}</li>
 	</ul>
 </div>
 
@@ -29,7 +36,7 @@
 
 <div>
 	<h3>Doughnut Chart with Legend</h3>
-	{{ember-chart type='Doughnut' data=pieData width=200 height=200 legend=true }}
+	{{ember-chart type='Doughnut' data=pieData width=200 height=200 legend=true}}
 </div>
 
 <div>
